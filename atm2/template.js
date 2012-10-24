@@ -1,41 +1,67 @@
-var balance = 1000;
+var c_balance = 1000;
+var s_balance = 1000;
 
 $(function(){
 
-	$('#amount').focus();
-	$('#deposit').click(deposit);
-	$('#withdraw').click(withdraw);
+	$('#c_amount').focus();
+	$('#c_deposit').click(c_deposit);
+	$('#c_withdraw').click(c_withdraw);
+	$('#s_deposit').click(s_deposit);
+	$('#s_withdraw').click(s_withdraw);
 
 });
 
-function deposit()
+function c_deposit()
 {
-	var amount = $('#amount').val();
+	var amount = $('#c_amount').val();
 	amount = parseInt(amount);
-	balance = balance + amount;
-	updateBalance();
+	c_balance = c_balance + amount;
+	$('#c_balance').text(c_balance);
 }
 
-function withdraw()
+function c_withdraw()
 {
-	var amount = $('#amount').val();
+	var amount = $('#c_amount').val();
 	amount = parseInt(amount);
-	balance = balance - amount;
-	updateBalance();
-}
-
-function updateBalance()
-{
-	$('#balance').text(balance);
 	
-	if(balance < 0)
+	if(amount <= c_balance)
 	{
-		$('#output').css('background-color', 'red');
-		$('#output').css('color', 'white');
+		c_balance = c_balance - amount;
 	}
-	else
+	else if (amount <= (c_balance + s_balance))
 	{
-		$('#output').css('background-color', '#cccccc');
-		$('#output').css('color', 'black');		
+		s_balance = c_balance + s_balance - amount;
+		c_balance = 0;
+	}
+	
+	$('#c_balance').text(c_balance);
+	$('#s_balance').text(s_balance);
+}
+
+function s_deposit()
+{
+	var amount = $('#s_amount').val();
+	amount = parseInt(amount);
+	s_balance = s_balance + amount;
+	$('#s_balance').text(s_balance);
+}
+
+function s_withdraw()
+{
+	var amount = $('#s_amount').val();
+	amount = parseInt(amount);
+	
+	if(amount <= s_balance)
+	{
+		s_balance = s_balance - amount;
+		$('#s_balance').text(s_balance);
 	}
 }
+
+
+
+
+
+
+
+
