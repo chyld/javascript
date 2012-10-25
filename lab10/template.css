@@ -1,0 +1,14 @@
+.photo
+{
+	float: left;
+	width: 150px;
+	height: 150px;
+	margin: 10px;
+	border: 1px solid black;
+}
+
+img
+{
+	width: 150px;
+	height: 150px;
+}
