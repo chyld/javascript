@@ -1,0 +1,36 @@
+@import url(http://fonts.googleapis.com/css?family=Sofadi+One);
+
+body
+{
+	background-color: #252525;
+}
+
+.photo
+{
+	float: left;
+	width: 100px;
+	height: 100px;
+	margin: 3px;
+}
+
+img
+{
+	width: 100px;
+	height: 100px;
+}
+
+input
+{
+	font-family: 'Sofadi One', cursive;
+}
+
+input[type='text']
+{
+	width: 500px;
+	font-size: 30px;
+}
+
+input[type='button']
+{
+	font-size: 30px;
+}
