@@ -40,8 +40,6 @@ function toggle_select_color()
 	if(selected_color != this)
 	{
 		$(selected_color).removeClass('selected');
-		
-		
 		selected_color = this;
 		$(selected_color).addClass('selected');
 	}
