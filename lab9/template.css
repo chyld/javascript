@@ -1,0 +1,14 @@
+.animal
+{
+	border: 1px dashed #252525;
+	width: 200px;
+	height: 200px;
+	float: left;
+	margin: 10px;
+}
+
+img
+{
+	width: 200px;
+	height: 200px;
+}
