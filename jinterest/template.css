@@ -1,0 +1,62 @@
+@import url(http://fonts.googleapis.com/css?family=Emblema+One);
+
+body
+{
+  background-color: #252525;
+  padding: 15px;
+}
+
+#header
+{
+  font-family: 'Emblema One', cursive;
+  font-size: 50px;
+  color: #cccccc;
+}
+
+#query
+{
+  width: 300px;
+}
+
+#controls
+{
+  margin-bottom: 15px;
+}
+
+#results
+{
+  float: left;
+  width: 50%;
+}
+
+#saved
+{
+  float: right;
+  width: 50%;
+}
+
+.result, .jin
+{
+	float: left;
+	margin: 3px;
+	border: 1px dashed #252525;
+	background-color: #252525;
+	height: 100px;
+}
+
+img
+{
+	width: 100px;
+	height: 100px;
+}
+
+.result input[type='text']
+{
+  width: 200px;
+}
+
+.control
+{
+  padding: 5px;
+  float: right;
+}
