@@ -101,22 +101,48 @@ function move_type(piece)
   var cc = parseInt($(selected_piece).data('col'));
   var fr = parseInt($(piece).data('row'));
   var fc = parseInt($(piece).data('col'));
+  var is_king = parseInt($(selected_piece).data('king'));
   
-  if(((fr == (cr+1))||(fr == (cr-1))) && ((fc == (cc+1))||(fc == (cc-1))))
-  {
+  if((((fr == (cr+1))||(fr == (cr-1))) && ((fc == (cc+1))||(fc == (cc-1)))) && is_king)
     return 'move';
-  }
 
-  if(((fr == (cr+2))||(fr == (cr-2))) && ((fc == (cc+2))||(fc == (cc-2))))
-  {
-    var jmp_row = ((fr - cr) / 2) + cr;
-    var jmp_col = ((fc - cc) / 2) + cc;
-    var piece = $('td[data-row="' + jmp_row + '"][data-col="' + jmp_col + '"]');
-    var jmp_player = $(piece).data('player');
-    
-    if((jmp_player != undefined) && (jmp_player != turn) && (jmp_player != 0))
-      return 'jump';
-  }
+  if((!is_king && turn == 1) && ((fr == (cr+1))  &&  ((fc == (cc+1)) || (fc == (cc-1)))))
+    return 'move';
+
+  if((!is_king && turn == 2) && ((fc == (cc+1))  &&  ((fr == (cr+1)) || (fr == (cr-1)))))
+    return 'move';
+
+  if((!is_king && turn == 3) && ((fr == (cr-1))  &&  ((fc == (cc+1)) || (fc == (cc-1)))))
+    return 'move';
+
+  if((!is_king && turn == 4) && ((fc == (cc-1))  &&  ((fr == (cr+1)) || (fr == (cr-1)))))
+    return 'move';
+
+  if((((fr == (cr+2))||(fr == (cr-2))) && ((fc == (cc+2))||(fc == (cc-2)))) && is_king)
+    return is_piece_jumpable(cr, cc, fr, fc);
+
+  if((!is_king && turn == 1) && ((fr == (cr+2))  &&  ((fc == (cc+2)) || (fc == (cc-2)))))
+    return is_piece_jumpable(cr, cc, fr, fc);
+
+  if((!is_king && turn == 2) && ((fc == (cc+2))  &&  ((fr == (cr+2)) || (fr == (cr-2)))))
+    return is_piece_jumpable(cr, cc, fr, fc);
+
+  if((!is_king && turn == 3) && ((fr == (cr-2))  &&  ((fc == (cc+2)) || (fc == (cc-2)))))
+    return is_piece_jumpable(cr, cc, fr, fc);
+
+  if((!is_king && turn == 4) && ((fc == (cc-2))  &&  ((fr == (cr+2)) || (fr == (cr-2)))))
+    return is_piece_jumpable(cr, cc, fr, fc);
+}
+
+function is_piece_jumpable(cr, cc, fr, fc)
+{
+  var jmp_row = ((fr - cr) / 2) + cr;
+  var jmp_col = ((fc - cc) / 2) + cc;
+  var piece = $('td[data-row="' + jmp_row + '"][data-col="' + jmp_col + '"]');
+  var jmp_player = $(piece).data('player');
+  
+  if((jmp_player != undefined) && (jmp_player != turn) && (jmp_player != 0))
+    return 'jump';  
 }
 
 function send_move_message(piece)
@@ -131,17 +157,24 @@ function send_jump_message(piece)
 
 function move_piece(who, row, col)
 {
-  $(selected_piece).css('background-color', '#252525');
-  $(selected_piece).removeClass('selected');
-  $(selected_piece).data('player', '0');
-  
   var piece = $('td[data-row="' + row + '"][data-col="' + col + '"]');
 
   $(piece).css('background-color', players[who-1].color);
-  $(piece).data('player', who);
   $(piece).addClass('selected');
+  if($(selected_piece).data('king') == 1)
+    $(piece).addClass('kinged');
+  $(piece).data('player', who);
+  $(piece).data('king', $(selected_piece).data('king'));
+
+  $(selected_piece).css('background-color', '#252525');
+  $(selected_piece).removeClass('selected');
+  $(selected_piece).removeClass('kinged');
+  $(selected_piece).data('player', '0');
+  $(selected_piece).data('king', '0');
 
   selected_piece = piece;
+  determine_king_status();
+  determine_winner();
 }
 
 function jump_piece(who, dest_row, dest_col)
@@ -153,8 +186,48 @@ function jump_piece(who, dest_row, dest_col)
   var piece = $('td[data-row="' + kill_row + '"][data-col="' + kill_col + '"]');
   $(piece).css('background-color', '#252525');
   $(piece).data('player', '0');
+  $(piece).removeClass('kinged');
   
   move_piece(who, dest_row, dest_col);
+}
+
+function determine_king_status()
+{
+  var current_row = $(selected_piece).data('row');
+  var current_col = $(selected_piece).data('col');
+  
+  if(((current_row == 12) && (turn == 1)) || ((current_col == 12) && (turn == 2)) || ((current_row == 1) && (turn == 3)) || ((current_col == 1) && (turn == 4)))
+  {
+    $(selected_piece).data('king', 1);
+    $(selected_piece).addClass('kinged');
+  }
+}
+
+function determine_winner()
+{
+  var row = $(selected_piece).data('row');
+  var col = $(selected_piece).data('col');
+  var king = $(selected_piece).data('king');
+  
+  if((turn == 1) && (king == 1) && (row < 4))
+    show_winner();
+  if((turn == 2) && (king == 1) && (col < 4))
+    show_winner();
+  if((turn == 3) && (king == 1) && (row > 9))
+    show_winner();
+  if((turn == 4) && (king == 1) && (col > 9))
+    show_winner();
+}
+
+function show_winner()
+{
+  var winner = players[turn-1].name;
+  $('#header').text(winner);
+  turn = 0
+  selected_piece = null;
+  $('.player').removeClass('active');
+  $('td').removeClass('selected');
+  $('#endturn').empty();
 }
 
 /* --------------------------------------------------------------- */
